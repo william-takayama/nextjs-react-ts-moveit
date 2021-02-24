@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
 
-  img {
+  .profileImage {
     width: 5.5rem;
     height: 5.5rem;
     border-radius: 50%;
@@ -20,6 +20,10 @@
     p {
       font-size: 1rem;
       margin-top: 0.5rem;
+
+      .levelImg {
+        margin-right: 0.5rem;
+      }
     }
   }
 }
