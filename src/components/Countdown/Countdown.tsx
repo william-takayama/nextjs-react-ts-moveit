@@ -1,9 +1,14 @@
 import { useEffect, useState } from 'react';
 import classes from './Countdown.module.scss';
+import cn from 'clsx';
+
+const INITIAL_TIME = 0.05 * 60;
+let countdownTimeOut: NodeJS.Timeout;
 
 export function Countdown() {
-  const [time, setTime] = useState(25 * 60);
-  const [active, setActive] = useState(false);
+  const [time, setTime] = useState(INITIAL_TIME);
+  const [isActive, setIsActive] = useState(false);
+  const [hasFinished, setHasFinished] = useState(false);
 
   const minutes = Math.floor(time / 60);
   const seconds = time % 60;
@@ -14,16 +19,25 @@ export function Countdown() {
     .split('');
 
   function startCountDown() {
-    setActive(true);
+    setIsActive(true);
+  }
+
+  function resetCountDown() {
+    clearTimeout(countdownTimeOut);
+    setIsActive(false);
+    setTime(INITIAL_TIME);
   }
 
   useEffect(() => {
-    if (active && time > 0) {
-      setTimeout(() => {
+    if (isActive && time > 0) {
+      countdownTimeOut = setTimeout(() => {
         setTime(time - 1);
       }, 1000);
+    } else if (isActive && time === 0) {
+      setHasFinished(true);
+      setIsActive(false);
     }
-  }, [active, time]);
+  }, [isActive, time]);
 
   return (
     <div>
@@ -39,9 +53,36 @@ export function Countdown() {
         </div>
       </div>
 
-      <button type="button" className={classes.button} onClick={startCountDown}>
-        Initialize cycle
-      </button>
+      {hasFinished ? (
+        <button disabled className={classes.button}>
+          Cycle has finished
+          <img
+            className={classes.icon}
+            src="assets/icons/level-up.svg"
+            alt="levelup"
+          />
+        </button>
+      ) : (
+        <>
+          {isActive ? (
+            <button
+              type="button"
+              className={cn(classes.button, classes.active)}
+              onClick={resetCountDown}
+            >
+              Abandon cycle
+            </button>
+          ) : (
+            <button
+              type="button"
+              className={cn(classes.button, classes.disabled)}
+              onClick={startCountDown}
+            >
+              Initialize cycle
+            </button>
+          )}
+        </>
+      )}
     </div>
   );
 }
