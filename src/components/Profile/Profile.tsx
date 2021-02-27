@@ -1,6 +1,6 @@
 import classes from './Profile.module.scss';
 
-export function Profile() {
+export function Profile(): JSX.Element {
   return (
     <div className={classes.container}>
       <img

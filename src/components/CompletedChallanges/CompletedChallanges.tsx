@@ -1,10 +1,14 @@
+import { useContext } from 'react';
+import { ChallengesContext } from '../../contexts/ChallengesContext';
 import classes from './CompletedChallanges.module.scss';
 
-export function CompletedChallanges() {
+export function CompletedChallanges(): JSX.Element {
+  const { challengesCompleted } = useContext(ChallengesContext);
+
   return (
     <div className={classes.container}>
       <span>Completed Challenges</span>
-      <span>5</span>
+      <span>{challengesCompleted}</span>
     </div>
   );
 }
