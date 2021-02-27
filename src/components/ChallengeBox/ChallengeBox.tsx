@@ -1,10 +1,24 @@
 import classes from './ChallengeBox.module.scss';
 import cn from 'clsx';
-import { useContext } from 'react';
+import { useCallback, useContext } from 'react';
 import { ChallengesContext } from '../../contexts/ChallengesContext';
+import { CountdownContext } from '../../contexts/CountdownContext';
 
 export function ChallengeBox(): JSX.Element {
-  const { activeChallenge, resetChallenge } = useContext(ChallengesContext);
+  const { activeChallenge, resetChallenge, completeChallenge } = useContext(
+    ChallengesContext,
+  );
+  const { resetCountdown } = useContext(CountdownContext);
+
+  const handleChallengeSucceeded = useCallback(() => {
+    completeChallenge();
+    resetCountdown();
+  }, [completeChallenge, resetCountdown]);
+
+  const handleChallengeFailed = useCallback(() => {
+    resetChallenge();
+    resetCountdown();
+  }, [resetChallenge, resetCountdown]);
 
   return (
     <div className={classes.container}>
@@ -27,11 +41,15 @@ export function ChallengeBox(): JSX.Element {
               <button
                 type="button"
                 className={classes.failed}
-                onClick={resetChallenge}
+                onClick={handleChallengeFailed}
               >
                 Fail
               </button>
-              <button type="button" className={classes.succeded}>
+              <button
+                type="button"
+                className={classes.succeeded}
+                onClick={handleChallengeSucceeded}
+              >
                 Completed!
               </button>
             </footer>
