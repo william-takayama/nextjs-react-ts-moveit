@@ -2,6 +2,7 @@ import React, {
   createContext,
   ReactNode,
   useCallback,
+  useEffect,
   useMemo,
   useState,
 } from 'react';
@@ -22,6 +23,7 @@ interface ChallengesContextData {
   levelUp: () => void;
   startNewChallenge: () => void;
   resetChallenge: () => void;
+  completeChallenge: () => void;
 }
 
 interface ChallengesProviderProps {
@@ -40,6 +42,10 @@ export function ChallengesProvider({
 
   const experienceToNextLevel = Math.pow((level + 1) * 4, 2);
 
+  useEffect(() => {
+    Notification.requestPermission();
+  }, []);
+
   const levelUp = useCallback(() => {
     setLevel(level + 1);
   }, [level]);
@@ -49,11 +55,45 @@ export function ChallengesProvider({
     const challenge = challenges[randomChallengeIndex];
 
     setActiveChallenge(challenge as Challenge);
+
+    new Audio('/assets/notification.mp3');
+
+    if (Notification.permission === 'granted') {
+      console.log('granted');
+      new Notification('New challenge 🙋', {
+        body: `I dare you! Award ${challenge.amount}xp!`,
+      });
+    }
   }, []);
 
   const resetChallenge = useCallback(() => {
     setActiveChallenge(null);
   }, []);
+
+  const completeChallenge = useCallback(() => {
+    if (!activeChallenge) {
+      return;
+    }
+
+    const { amount } = activeChallenge;
+
+    let finalExperience = currentXp + amount;
+
+    if (finalExperience >= experienceToNextLevel) {
+      levelUp();
+      finalExperience = finalExperience - experienceToNextLevel;
+    }
+
+    setCurrentXp(finalExperience);
+    setActiveChallenge(null);
+    setChallengesCompleted(challengesCompleted + 1);
+  }, [
+    activeChallenge,
+    challengesCompleted,
+    currentXp,
+    experienceToNextLevel,
+    levelUp,
+  ]);
 
   const context = useMemo(
     () => ({
@@ -65,6 +105,7 @@ export function ChallengesProvider({
       activeChallenge,
       resetChallenge,
       experienceToNextLevel,
+      completeChallenge,
     }),
     [
       challengesCompleted,
@@ -75,6 +116,7 @@ export function ChallengesProvider({
       activeChallenge,
       resetChallenge,
       experienceToNextLevel,
+      completeChallenge,
     ],
   );
 
