@@ -6,7 +6,7 @@ export function ExperienceBar(): JSX.Element {
   const { currentXp, experienceToNextLevel } = useContext(ChallengesContext);
 
   const percentToNextLevel = useMemo(() => {
-    const status = Math.round(currentXp / experienceToNextLevel) * 100;
+    const status = (currentXp / experienceToNextLevel) * 100;
 
     return status.toString() + '%';
   }, [currentXp, experienceToNextLevel]);
