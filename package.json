@@ -8,15 +8,21 @@
     "start": "next start"
   },
   "dependencies": {
+    "js-cookie": "^2.2.1",
     "next": "10.0.7",
     "react": "17.0.1",
     "react-dom": "17.0.1"
   },
   "devDependencies": {
-    "eslint": "^7.20.0",
+    "@types/js-cookie": "^2.2.6",
+    "@types/node": "^14.14.31",
+    "@types/react": "^17.0.2",
+    "@types/react-dom": "^17.0.1",
     "@typescript-eslint/eslint-plugin": "2.x",
     "@typescript-eslint/parser": "2.x",
     "babel-eslint": "10.x",
+    "clsx": "^1.1.1",
+    "eslint": "^7.20.0",
     "eslint-config-prettier": "^6.12.0",
     "eslint-config-react-app": "^5.2.1",
     "eslint-plugin-flowtype": "4.x",
@@ -25,10 +31,6 @@
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-react": "7.x",
     "eslint-plugin-react-hooks": "2.x",
-    "@types/node": "^14.14.31",
-    "@types/react": "^17.0.2",
-    "@types/react-dom": "^17.0.1",
-    "clsx": "^1.1.1",
     "sass": "^1.32.8",
     "typescript": "^4.2.2"
   }
