@@ -1,7 +1,8 @@
 @mixin animation-pulsate(
-  $duration: 1.4s,
-  $colorStart: var(--color-xxxx-contrast),
-  $colorEnd: var(--color-accent)
+  $type: box-shadow,
+  $initial: 0 0 1rem var(--color-x-accent),
+  $final: 0 0 1rem var(--color-xxxx-contrast),
+  $duration: 1.4s
 ) {
   animation-name: pulsate;
   animation-duration: #{$duration};
@@ -10,10 +11,10 @@
 
   @keyframes pulsate {
     0% {
-      box-shadow: 0 0 1rem #{$colorStart};
+      #{$type}: #{$initial};
     }
     100% {
-      box-shadow: 0 0 1rem #{$colorEnd};
+      #{$type}: #{$final};
     }
   }
 }
