@@ -1,21 +1,33 @@
-import { useContext } from 'react';
+import Image from 'next/image';
+import React, { useContext } from 'react';
 import { ChallengesContext } from '../../contexts/ChallengesContext';
 import classes from './Profile.module.scss';
 
-export function Profile(): JSX.Element {
+interface ProfileProps {
+  imageUrl?: string;
+}
+
+export function Profile({ imageUrl }: ProfileProps): JSX.Element {
   const { level } = useContext(ChallengesContext);
 
   return (
     <div className={classes.container}>
-      <img
-        className={classes.profileImage}
-        src="https://github.com/william-takayama.png"
-        alt="profile image"
-      />
+      <div className={classes.imageContainer}>
+        {imageUrl && (
+          <Image
+            src={imageUrl}
+            alt="Profile image"
+            width={4.5 * 16}
+            height={4.5 * 16}
+            objectFit="cover"
+            className={classes.profileImage}
+          />
+        )}
+      </div>
 
-      <div>
-        <strong>William S. Takayama</strong>
-        <p>
+      <div className={classes.infoContainer}>
+        <strong className={classes.title}>William S. Takayama</strong>
+        <p className={classes.levelContainer}>
           <img
             className={classes.levelImg}
             src="assets/icons/level.svg"
