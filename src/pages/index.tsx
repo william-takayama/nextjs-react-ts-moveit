@@ -28,7 +28,7 @@ export default function Home({
     >
       <div className={classes.container}>
         <Head>
-          <title>Home | moveit</title>
+          <title>Home | TimeToMove</title>
         </Head>
 
         <ExperienceBar />
