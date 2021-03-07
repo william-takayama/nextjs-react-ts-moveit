@@ -1,4 +1,10 @@
 .header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 0 8rem;
+  height: var(--size-height-experiencebar);
   display: flex;
   align-items: center;
 
@@ -10,14 +16,14 @@
     flex: 1;
     height: 4px;
     border-radius: 4px;
-    background: var(--gray-line);
+    background: var(--color-xxx-contrast);
     margin: 0 1.5rem;
     position: relative;
 
     div {
       height: 4px;
       border-radius: 4px;
-      background: var(--green);
+      background: var(--color-positive);
     }
   }
 }

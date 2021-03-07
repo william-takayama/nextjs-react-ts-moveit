@@ -11,7 +11,7 @@
 }
 
 .container {
-  background: var(--white);
+  background: var(--color-contrast);
   width: 100%;
   max-width: 400px;
   padding: 2rem 3rem;
@@ -23,19 +23,19 @@
   header {
     font-size: 8.75rem;
     font-weight: 600;
-    color: var(--blue);
+    color: var(--color-secondary);
     background: url('/assets/icons/levelup.svg') no-repeat center;
     background-size: contain;
   }
 
   strong {
     font-size: 2.25rem;
-    color: var(--title);
+    color: var(--color-title);
   }
 
   p {
     font-size: 1.25rem;
-    color: var(--text);
+    color: var(--color-text);
     margin-top: 0.25rem;
   }
 

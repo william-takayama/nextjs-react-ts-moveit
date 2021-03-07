@@ -5,17 +5,38 @@
 }
 
 :root {
-  --background-color: #f2f3f5;
-  --foreground-color: #666;
-  --white: #fff;
-  --gray-line: #dcdde0;
-  --text: var(--foreground-color);
-  --title: #2e384d;
-  --red: #e83f5b;
-  --green: #4cd62b;
-  --blue: #5965e0;
-  --blue-dark: #4953b8;
-  --blue-twitter: #2aa9e0;
+  // Main colors
+  --color-primary: #121212;
+  --color-secondary: rgba(115, 45, 205, 1);
+
+  // Contrast colors
+  --color-contrast: rgba(255, 255, 255, 1);
+  --color-x-contrast: rgba(255, 255, 255, 0.8);
+  --color-xx-contrast: rgba(255, 255, 255, 0.6);
+  --color-xxx-contrast: rgba(255, 255, 255, 0.3);
+  --color-xxxx-contrast: rgba(255, 255, 255, 0.1);
+
+  // Accent colors
+  --color-accent: rgba(115, 45, 205, 1);
+  --color-x-accent: rgba(115, 45, 205, 0.8);
+  --color-xx-accent: rgba(115, 45, 205, 0.6);
+  --color-xxx-accent: rgba(115, 45, 205, 0.3);
+  --color-xxxx-accent: rgba(115, 45, 205, 0.1);
+
+  // Feedback
+  --color-positive: #66e766;
+  --color-negative: #f07474;
+
+  --background-color: var(--color-primary);
+  --foreground-color: var(--color-x-contrast);
+  --color-text: var(--foreground-color);
+  --color-title: #2e384d;
+
+  // Specific colors
+  --color-twitter: #2aa9e0;
+
+  // Size
+  --size-height-experiencebar: 4rem;
 }
 
 @media (max-width: 1080px) {
@@ -31,7 +52,7 @@
 }
 
 body {
-  font-family: "Inter", sans-serif;
+  font-family: 'Inter', sans-serif;
   background: var(--background-color);
   color: var(--foreground-color);
 }
@@ -40,7 +61,7 @@ body,
 input,
 textarea,
 button {
-  font: 400 1rem "Inter", sans-serif;
+  font: 400 1rem 'Inter', sans-serif;
 }
 
 button {

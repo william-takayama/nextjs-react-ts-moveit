@@ -1,29 +1,37 @@
+@use '../../styles/mixins.scss' as *;
+
 .container {
   display: flex;
   align-items: center;
+  border: 1px solid var(--color-accent);
+  box-shadow: 0 0 1rem var(--color-x-accent);
+  padding: 0.5rem;
+  border-radius: 1rem;
 
-  .profileImage {
-    width: 5.5rem;
-    height: 5.5rem;
-    border-radius: 50%;
-  }
+  @include animation-pulsate;
+}
 
-  div {
-    margin-left: 1.5rem;
+.profileImage {
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 50%;
+}
 
-    strong {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: var(--title);
-    }
+.infoContainer {
+  margin-left: 1.5rem;
+}
 
-    p {
-      font-size: 1rem;
-      margin-top: 0.5rem;
+.title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-xx-contrast);
+}
 
-      .levelImg {
-        margin-right: 0.5rem;
-      }
-    }
+.levelContainer {
+  font-size: 1rem;
+  margin-top: 0.5rem;
+
+  .levelImg {
+    margin-right: 0.5rem;
   }
 }

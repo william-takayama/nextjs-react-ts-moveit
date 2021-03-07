@@ -1,6 +1,6 @@
 .container {
   height: 100%;
-  background-color: var(--white);
+  background-color: var(--color-xxxx-contrast);
   border-radius: 5%;
   box-shadow: 0 0 60px rgba(0, 0, 0, 0.05);
   padding: 1.5rem 2rem;
@@ -42,11 +42,11 @@
   flex-flow: column;
 
   header {
-    color: var(--color-blue);
+    color: var(--color-x-contrast);
     font-weight: 600;
     font-size: 1.25rem;
-    padding: 0 2rem 1.5rem;
-    border-bottom: 1px solid var(--gray-line);
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--color-contrast);
   }
 
   main {
@@ -57,9 +57,9 @@
     justify-content: center;
 
     strong {
-      font-size: 2rem;
+      font-size: 1.5rem;
       font-weight: 600;
-      color: var(--title);
+      color: var(--color-secondary);
       margin: 1.5rem 0 1rem;
     }
 
@@ -80,7 +80,7 @@
       align-items: center;
       border: 0;
       border-radius: 5px;
-      color: var(--white);
+      color: var(--color-contrast);
       font-size: 1rem;
       font-weight: 600;
       transition: filter 0.3s;
@@ -90,11 +90,11 @@
       }
 
       &.succeeded {
-        background-color: var(--green);
+        background-color: var(--color-positive);
       }
 
       &.failed {
-        background-color: var(--red);
+        background-color: var(--color-negative);
       }
     }
   }
