@@ -1,22 +1,73 @@
+import produce from 'immer';
+import Cookies from 'js-cookie';
 import React, {
   createContext,
   ReactNode,
   useCallback,
   useEffect,
   useMemo,
-  useState,
+  useReducer,
 } from 'react';
 import challenges from '../../challenges.json';
-import Cookies from 'js-cookie';
-import { HomeProps } from '../pages';
-import { LevelUpModal } from '../components/LevelUpModal/LevelUpModal';
+import LevelUpModal from '../components/LevelUpModal/LevelUpModal';
 
+type ReducerState = {
+  level: number;
+  currentXp: number;
+  challengesCompleted: number;
+  isModalOpen: boolean;
+  hasLeveledUp: boolean;
+  activeChallenge?: Challenge;
+};
+
+type ReducerAction =
+  | {
+      type: 'LEVEL_UP';
+    }
+  | {
+      type: 'START_NEW_CHALLENGE';
+      challenge: Challenge;
+    }
+  | {
+      type: 'RESET_CHALLENGE';
+    }
+  | {
+      type: 'COMPLETE_CHALLENGE';
+      currentXp: ReducerState['currentXp'];
+      challengesCompleted: ReducerState['challengesCompleted'];
+    }
+  | {
+      type: 'CLOSE_MODAL';
+    };
+
+function reducer(state: ReducerState, action: ReducerAction): ReducerState {
+  return produce(state, draft => {
+    if (action.type === 'LEVEL_UP') {
+      draft.level = state.level + 1;
+      draft.isModalOpen = true;
+      draft.hasLeveledUp = true;
+    }
+    if (action.type === 'START_NEW_CHALLENGE') {
+      draft.activeChallenge = action.challenge;
+    }
+    if (action.type === 'RESET_CHALLENGE') {
+      draft.activeChallenge = null;
+    }
+    if (action.type === 'COMPLETE_CHALLENGE') {
+      draft.currentXp = action.currentXp;
+      draft.challengesCompleted = action.challengesCompleted;
+      draft.activeChallenge = null;
+    }
+    if (action.type === 'CLOSE_MODAL') {
+      draft.isModalOpen = false;
+    }
+  });
+}
 interface Challenge {
   type: 'body' | 'eye';
   description: string;
   amount: number;
 }
-
 interface ChallengesContextData {
   level: number;
   currentXp: number;
@@ -29,7 +80,11 @@ interface ChallengesContextData {
   completeChallenge: () => void;
   closeModal: () => void;
 }
-
+export interface HomeProps {
+  level: number;
+  currentXp: number;
+  challengesCompleted: number;
+}
 interface ChallengesProviderProps extends HomeProps {
   children: ReactNode;
 }
@@ -40,19 +95,30 @@ export function ChallengesProvider({
   children,
   ...rest
 }: ChallengesProviderProps): JSX.Element {
-  const [level, setLevel] = useState(rest.level ?? 1);
-  const [currentXp, setCurrentXp] = useState(rest.currentXp ?? 0);
-  const [challengesCompleted, setChallengesCompleted] = useState(
-    rest.challengesCompleted ?? 0,
-  );
-  const [activeChallenge, setActiveChallenge] = useState<Challenge>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const initialState: ReducerState = {
+    hasLeveledUp: false,
+    level: rest.level ?? 1,
+    currentXp: rest.currentXp ?? 0,
+    challengesCompleted: rest.challengesCompleted ?? 0,
+    activeChallenge: null,
+    isModalOpen: false,
+  };
+
+  const [
+    {
+      level,
+      currentXp,
+      challengesCompleted,
+      activeChallenge,
+      isModalOpen,
+      hasLeveledUp,
+    },
+    send,
+  ] = useReducer<typeof reducer>(reducer, initialState);
 
   const experienceToNextLevel = Math.pow((level + 1) * 4, 2);
 
-  /**
-   * Side-effects
-   */
+  // Side-effects
 
   useEffect(() => {
     Notification.requestPermission();
@@ -64,25 +130,23 @@ export function ChallengesProvider({
     Cookies.set('challengesCompleted', String(challengesCompleted));
   }, [level, currentXp, challengesCompleted]);
 
-  /**
-   * Functions
-   */
+  // Functions
 
   const levelUp = useCallback(() => {
-    setLevel(level + 1);
-    setIsModalOpen(true);
-  }, [level]);
+    send({ type: 'LEVEL_UP' });
+  }, []);
 
   const startNewChallenge = useCallback(() => {
     const randomChallengeIndex = Math.floor(Math.random() * challenges.length);
     const challenge = challenges[randomChallengeIndex];
 
-    setActiveChallenge(challenge as Challenge);
+    send({ type: 'START_NEW_CHALLENGE', challenge: challenge as Challenge });
 
+    // eslint-disable-next-line no-new
     new Audio('/assets/notification.mp3');
 
     if (Notification.permission === 'granted') {
-      console.log('granted');
+      // eslint-disable-next-line no-new
       new Notification('New challenge 🙋', {
         body: `I dare you! Award ${challenge.amount}xp!`,
       });
@@ -90,7 +154,7 @@ export function ChallengesProvider({
   }, []);
 
   const resetChallenge = useCallback(() => {
-    setActiveChallenge(null);
+    send({ type: 'RESET_CHALLENGE' });
   }, []);
 
   const completeChallenge = useCallback(() => {
@@ -104,12 +168,14 @@ export function ChallengesProvider({
 
     if (finalExperience >= experienceToNextLevel) {
       levelUp();
-      finalExperience = finalExperience - experienceToNextLevel;
+      finalExperience -= experienceToNextLevel;
     }
 
-    setCurrentXp(finalExperience);
-    setActiveChallenge(null);
-    setChallengesCompleted(challengesCompleted + 1);
+    send({
+      type: 'COMPLETE_CHALLENGE',
+      currentXp: finalExperience,
+      challengesCompleted: challengesCompleted + 1,
+    });
   }, [
     activeChallenge,
     challengesCompleted,
@@ -119,12 +185,10 @@ export function ChallengesProvider({
   ]);
 
   const closeModal = useCallback(() => {
-    setIsModalOpen(false);
+    send({ type: 'CLOSE_MODAL' });
   }, []);
 
-  /**
-   * Exporting context
-   */
+  // Exporting context
   const context = useMemo(
     () => ({
       level,
@@ -137,11 +201,12 @@ export function ChallengesProvider({
       experienceToNextLevel,
       completeChallenge,
       closeModal,
+      hasLeveledUp,
     }),
     [
-      challengesCompleted,
-      currentXp,
       level,
+      currentXp,
+      challengesCompleted,
       levelUp,
       startNewChallenge,
       activeChallenge,
@@ -149,6 +214,7 @@ export function ChallengesProvider({
       experienceToNextLevel,
       completeChallenge,
       closeModal,
+      hasLeveledUp,
     ],
   );
 

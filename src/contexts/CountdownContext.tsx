@@ -1,3 +1,4 @@
+import produce from 'immer';
 import {
   createContext,
   ReactNode,
@@ -5,9 +6,56 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useState,
+  useReducer,
 } from 'react';
 import { ChallengesContext } from './ChallengesContext';
+
+type ReducerState = {
+  time: number;
+  isActive: boolean;
+  hasFinished: boolean;
+};
+
+type ReducerAction =
+  | {
+      type: 'START_COUNTDOWN';
+    }
+  | {
+      type: 'RESET_COUNTDOWN';
+      time: ReducerState['time'];
+    }
+  | {
+      type: 'UPDATE_TIME';
+      time: ReducerState['time'];
+    }
+  | {
+      type: 'END_COUNTDOWN';
+      startNewChallenge: () => void;
+    };
+
+function reducer(state: ReducerState, action: ReducerAction): ReducerState {
+  return produce(state, draft => {
+    if (action.type === 'START_COUNTDOWN') {
+      draft.isActive = true;
+    }
+
+    if (action.type === 'RESET_COUNTDOWN') {
+      draft.time = action.time;
+      draft.hasFinished = false;
+      draft.isActive = false;
+    }
+
+    if (action.type === 'UPDATE_TIME') {
+      draft.time = action.time;
+    }
+
+    if (action.type === 'END_COUNTDOWN') {
+      draft.hasFinished = true;
+      draft.isActive = false;
+      action.startNewChallenge();
+    }
+  });
+}
 
 interface CountdownProviderProps {
   children: ReactNode;
@@ -32,46 +80,50 @@ export function CountdownProvider({
 }: CountdownProviderProps): JSX.Element {
   const { startNewChallenge } = useContext(ChallengesContext);
 
-  const [time, setTime] = useState(INITIAL_TIME);
-  const [isActive, setIsActive] = useState(false);
-  const [hasFinished, setHasFinished] = useState(false);
+  const initialState: ReducerState = {
+    time: INITIAL_TIME,
+    isActive: false,
+    hasFinished: false,
+  };
+
+  const [{ hasFinished, isActive, time }, send] = useReducer<typeof reducer>(
+    reducer,
+    initialState,
+  );
 
   const minutes = Math.floor(time / 60);
   const seconds = time % 60;
 
   const resetCountdown = useCallback(() => {
     clearTimeout(countdownTimeOut);
-    setIsActive(false);
-    setTime(INITIAL_TIME);
-    setHasFinished(false);
+    send({ type: 'RESET_COUNTDOWN', time: INITIAL_TIME });
   }, []);
 
   const startCountdown = useCallback(() => {
-    setIsActive(true);
+    send({ type: 'START_COUNTDOWN' });
   }, []);
 
   useEffect(() => {
     if (isActive && time > 0) {
       countdownTimeOut = setTimeout(() => {
-        setTime(time - 1);
+        send({ type: 'UPDATE_TIME', time: time - 1 });
       }, 1000);
     } else if (isActive && time === 0) {
-      setHasFinished(true);
-      setIsActive(false);
-      startNewChallenge();
+      send({ type: 'END_COUNTDOWN', startNewChallenge });
     }
   }, [isActive, time, startNewChallenge]);
 
-  const context = useMemo(() => {
-    return {
+  const context = useMemo(
+    () => ({
       startCountdown,
       resetCountdown,
       isActive,
       minutes,
       seconds,
       hasFinished,
-    };
-  }, [hasFinished, isActive, minutes, resetCountdown, seconds, startCountdown]);
+    }),
+    [hasFinished, isActive, minutes, resetCountdown, seconds, startCountdown],
+  );
 
   return (
     <CountdownContext.Provider value={context}>
