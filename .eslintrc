@@ -1,0 +1,53 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true,
+        "node": true,
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:react-hooks/recommended",
+        "airbnb",
+        "react-app"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 12,
+        "sourceType": "module"
+    },
+    "plugins": [
+        "react",
+        "@typescript-eslint"
+    ],
+    "rules": {
+        "react/react-in-jsx-scope": "off",
+        "no-func-assign": "off",
+        "react/jsx-filename-extension": [2, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
+        "no-param-reassign": "off",
+        "import/extensions": "off",
+        "arrow-parens": "off",
+        "react/require-default-props": "off",
+        "react/jsx-one-expression-per-line": "off",
+        "react/jsx-props-no-spreading": "off",
+        "object-curly-newline": "off"
+    },
+    "globals": {
+        "Notification": "readonly",
+        "Audio": "readonly"
+    },
+    "settings": {
+        "import/resolver": {
+            "node": {
+                "extensions": [".js", ".jsx", ".ts", ".tsx"]
+            }
+        },
+        "react": {
+            "version": "detect"
+        }
+    }
+}
