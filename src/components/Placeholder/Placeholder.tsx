@@ -1,6 +1,6 @@
+import cn from 'clsx';
 import { BaseProps } from '../../interfaces/BaseProps';
 import classes from './Placeholder.module.scss';
-import cn from 'clsx';
 
 interface PlaceholdeProps extends BaseProps {
   width?: string | number;
@@ -23,10 +23,10 @@ export default function Placeholder({
       id={id}
       className={cn(className, classes.placeholder)}
       style={{
-        backgroundColor: backgroundColor,
-        width: width,
-        height: height,
-        borderRadius: borderRadius,
+        backgroundColor,
+        width,
+        height,
+        borderRadius,
         ...style,
       }}
     />

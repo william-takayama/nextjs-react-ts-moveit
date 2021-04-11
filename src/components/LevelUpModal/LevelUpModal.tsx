@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { ChallengesContext } from '../../contexts/ChallengesContext';
 import classes from './LevelUpModal.module.scss';
 
-export function LevelUpModal(): JSX.Element {
+export default function LevelUpModal(): JSX.Element {
   const { level, closeModal } = useContext(ChallengesContext);
 
   return (

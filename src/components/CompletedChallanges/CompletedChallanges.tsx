@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { ChallengesContext } from '../../contexts/ChallengesContext';
 import classes from './CompletedChallanges.module.scss';
 
-export function CompletedChallanges(): JSX.Element {
+export default function CompletedChallanges(): JSX.Element {
   const { challengesCompleted } = useContext(ChallengesContext);
 
   return (

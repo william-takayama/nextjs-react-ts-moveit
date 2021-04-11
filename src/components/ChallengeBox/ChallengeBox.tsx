@@ -1,10 +1,10 @@
-import classes from './ChallengeBox.module.scss';
 import cn from 'clsx';
 import { useCallback, useContext } from 'react';
 import { ChallengesContext } from '../../contexts/ChallengesContext';
 import { CountdownContext } from '../../contexts/CountdownContext';
+import classes from './ChallengeBox.module.scss';
 
-export function ChallengeBox(): JSX.Element {
+export default function ChallengeBox(): JSX.Element {
   const { activeChallenge, resetChallenge, completeChallenge } = useContext(
     ChallengesContext,
   );
@@ -24,7 +24,7 @@ export function ChallengeBox(): JSX.Element {
     <div className={classes.container}>
       <div
         className={cn({
-          [classes.active]: activeChallenge,
+          [classes.active]: Boolean(activeChallenge),
           [classes.nonActive]: !activeChallenge,
         })}
       >

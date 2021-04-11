@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import { CountdownContext } from '../../contexts/CountdownContext';
 import classes from './Countdown.module.scss';
 
-export function Countdown(): JSX.Element {
+export default function Countdown(): JSX.Element {
   const {
     resetCountdown,
     isActive,
@@ -33,7 +33,7 @@ export function Countdown(): JSX.Element {
       </div>
 
       {hasFinished ? (
-        <button disabled className={classes.button}>
+        <button type="button" disabled className={classes.button}>
           Cycle has finished
           <img
             className={classes.icon}
